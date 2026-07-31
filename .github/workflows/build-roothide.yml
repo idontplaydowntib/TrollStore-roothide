@@ -1,0 +1,79 @@
+name: Build TrollStore Lite (roothide)
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "roothide-*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    env:
+      THEOS: ${{ github.workspace }}/theos
+      SDK_VERSION: "16.5"
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Install build dependencies
+        run: |
+          brew update || true
+          brew install ldid xz make libarchive openssl pkg-config
+          echo "$(brew --prefix)/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
+          echo "$(brew --prefix)/opt/openssl/bin" >> "$GITHUB_PATH"
+          echo "PKG_CONFIG_PATH=$(brew --prefix)/opt/openssl/lib/pkgconfig:$(brew --prefix)/opt/libarchive/lib/pkgconfig" >> "$GITHUB_ENV"
+
+      - name: Set up roothide Theos
+        run: |
+          set -e
+          git clone --recursive https://github.com/roothide/theos.git "$THEOS"
+          echo "THEOS=$THEOS" >> "$GITHUB_ENV"
+
+      - name: Install patched iOS SDK
+        run: |
+          set -e
+          mkdir -p "$THEOS/sdks"
+          if ls "$THEOS/sdks" | grep -q "iPhoneOS${SDK_VERSION}.sdk"; then
+            echo "SDK already present."
+          else
+            git clone -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git "$RUNNER_TEMP/sdks"
+            cd "$RUNNER_TEMP/sdks"
+            git sparse-checkout set --no-cone "iPhoneOS${SDK_VERSION}.sdk"
+            git checkout
+            cp -r "iPhoneOS${SDK_VERSION}.sdk" "$THEOS/sdks/"
+          fi
+          ls -la "$THEOS/sdks"
+
+      - name: Build roothide deb
+        run: |
+          set -e
+          make make_trollstore_lite_roothide
+          echo "--- produced packages ---"
+          find ./TrollStoreLite/packages -name "*.deb" -maxdepth 1 -print
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p out
+          cp ./TrollStoreLite/packages/*.deb out/
+          ls -la out
+
+      - name: Upload deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrollStoreLite-roothide-deb
+          path: out/*.deb
+          if-no-files-found: error
+
+      - name: Attach deb to release (tag builds only)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*.deb

@@ -90,4 +90,12 @@ make_trollstore_lite:
 	@$(MAKE) -C ./TrollStoreLite $(MAKECMDGOALS)
 endif
 
-.PHONY: $(TOPTARGETS) pre_build assemble_trollstore make_trollhelper_package make_trollhelper_embedded build_installer15 build_installer64e
+make_trollstore_lite_roothide:
+	@$(MAKE) -C ./RootHelper TROLLSTORE_LITE=1 clean
+	@$(MAKE) -C ./TrollStoreLite clean
+	@$(MAKE) -C ./RootHelper DEBUG=0 TROLLSTORE_LITE=1 THEOS_PACKAGE_SCHEME=roothide
+	@rm -rf ./TrollStoreLite/Resources/trollstorehelper
+	@cp ./RootHelper/.theos/obj/trollstorehelper_lite ./TrollStoreLite/Resources/trollstorehelper
+	@$(MAKE) -C ./TrollStoreLite package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
+
+.PHONY: $(TOPTARGETS) pre_build assemble_trollstore make_trollhelper_package make_trollhelper_embedded build_installer15 build_installer64e make_trollstore_lite_roothide
