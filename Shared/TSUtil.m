@@ -4,7 +4,12 @@
 #import <spawn.h>
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
+#ifdef THEOS_PACKAGE_SCHEME_ROOTHIDE
+#import <roothide.h>
+#define JBROOT_PATH(x) jbroot(x)
+#else
 #import <libroot.h>
+#endif
 
 static EXPLOIT_TYPE gPlatformVulnerabilities;
 

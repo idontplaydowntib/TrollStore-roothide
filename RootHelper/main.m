@@ -24,7 +24,12 @@
 #import <SpringBoardServices/SpringBoardServices.h>
 #import <FrontBoardServices/FBSSystemService.h>
 #import <Security/Security.h>
+#ifdef THEOS_PACKAGE_SCHEME_ROOTHIDE
+#import <roothide.h>
+#define JBROOT_PATH(x) jbroot(x)
+#else
 #import <libroot.h>
+#endif
 
 #ifdef EMBEDDED_ROOT_HELPER
 #define MAIN_NAME rootHelperMain

@@ -13,4 +13,8 @@ TrollStoreLite_LIBRARIES = archive
 TrollStoreLite_CFLAGS = -fobjc-arc -I../Shared -I$(shell brew --prefix)/opt/libarchive/include -DTROLLSTORE_LITE
 TrollStoreLite_CODESIGN_FLAGS = -Sentitlements.plist
 
+ifeq ($(THEOS_PACKAGE_SCHEME),roothide)
+TrollStoreLite_LDFLAGS += -lroothide
+endif
+
 include $(THEOS_MAKE_PATH)/application.mk

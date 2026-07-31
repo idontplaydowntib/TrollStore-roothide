@@ -21,6 +21,10 @@ $(HELPER_NAME)_LDFLAGS = -L../ChOma/external/ios -lcrypto
 else
 $(HELPER_NAME)_CODESIGN_FLAGS = -Sentitlements.plist
 endif
+
+ifeq ($(THEOS_PACKAGE_SCHEME),roothide)
+$(HELPER_NAME)_LDFLAGS += -lroothide
+endif
  
 $(HELPER_NAME)_CFLAGS = -fobjc-arc -I../Shared $(shell pkg-config --cflags libcrypto) -I../ChOma/src -I../Exploits/fastPathSign/src -I$(shell brew --prefix)/opt/libarchive/include
 
