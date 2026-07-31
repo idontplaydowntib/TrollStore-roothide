@@ -27,8 +27,12 @@
 #ifdef THEOS_PACKAGE_SCHEME_ROOTHIDE
 #import <roothide.h>
 #define JBROOT_PATH(x) jbroot(x)
+// roothide bootstrap tools (e.g. ldid) resolve paths against the jbroot vroot,
+// so rootfs-based file arguments must be converted to jbroot-based paths.
+#define LDID_ARG_PATH(x) rootfs(x)
 #else
 #import <libroot.h>
+#define LDID_ARG_PATH(x) (x)
 #endif
 
 #ifdef EMBEDDED_ROOT_HELPER
@@ -526,11 +530,11 @@ int signAdhoc(NSString *filePath, NSDictionary *entitlements)
 			if (entitlementsXML) {
 				entitlementsPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID UUID].UUIDString] stringByAppendingPathExtension:@"plist"];
 				[entitlementsXML writeToFile:entitlementsPath atomically:NO];
-				signArg = [@"-S" stringByAppendingString:entitlementsPath];
+				signArg = [@"-S" stringByAppendingString:LDID_ARG_PATH(entitlementsPath)];
 			}
 			
 		}
-		int ldidRet = runLdid(@[signArg, filePath], nil, &errorOutput);
+		int ldidRet = runLdid(@[signArg, LDID_ARG_PATH(filePath)], nil, &errorOutput);
 		if (entitlementsPath) {
 			[[NSFileManager defaultManager] removeItemAtPath:entitlementsPath error:nil];
 		}
