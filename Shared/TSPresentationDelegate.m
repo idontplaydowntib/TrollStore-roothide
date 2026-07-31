@@ -42,7 +42,7 @@ static UIAlertController* g_activityController;
 
 		if(cancelHandler)
 		{
-			UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction* action)
+			UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction* action)
 			{
 				self.activityController = nil;
 				cancelHandler();
