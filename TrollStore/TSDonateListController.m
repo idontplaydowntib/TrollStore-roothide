@@ -22,10 +22,10 @@
 		
 		PSSpecifier* alfieGroupSpecifier = [PSSpecifier emptyGroupSpecifier];
 		alfieGroupSpecifier.name = @"Alfie";
-		[alfieGroupSpecifier setProperty:@"Alfie 通过 patchdiffing 发现了新的 CoreTrust 漏洞（CVE-2023-41991），制作了 POC 二进制文件，并借助 ChOma 库实现了自动应用该漏洞，同时也为该库做出了贡献。" forKey:@"footerText"];
+		[alfieGroupSpecifier setProperty:@"Alfie found the new CoreTrust bug (CVE-2023-41991) via patchdiffing, produced a POC binary and worked on automatically applying it with the help of the ChOma library, while also contributing to said library." forKey:@"footerText"];
 		[_specifiers addObject:alfieGroupSpecifier];
 
-		PSSpecifier* alfieDonateSpecifier = [PSSpecifier preferenceSpecifierNamed:@"捐赠给 alfiecg_dev"
+		PSSpecifier* alfieDonateSpecifier = [PSSpecifier preferenceSpecifierNamed:@"Donate to alfiecg_dev"
 									target:self
 									set:nil
 									get:nil
@@ -39,10 +39,10 @@
 
 		PSSpecifier* opaGroupSpecifier = [PSSpecifier emptyGroupSpecifier];
 		opaGroupSpecifier.name = @"Opa";
-		[opaGroupSpecifier setProperty:@"Opa 开发了 ChOma 库，帮助利用它实现了漏洞的自动化应用，并将其集成到了巨魔商店中。" forKey:@"footerText"];
+		[opaGroupSpecifier setProperty:@"Opa developed the ChOma library, helped with automating the bug using it and integrated it into TrollStore." forKey:@"footerText"];
 		[_specifiers addObject:opaGroupSpecifier];
 
-		PSSpecifier* opaDonateSpecifier = [PSSpecifier preferenceSpecifierNamed:@"捐赠给 opa334"
+		PSSpecifier* opaDonateSpecifier = [PSSpecifier preferenceSpecifierNamed:@"Donate to opa334"
 									target:self
 									set:nil
 									get:nil
@@ -54,7 +54,7 @@
 		opaDonateSpecifier.buttonAction = @selector(donateToOpaPressed);
 		[_specifiers addObject:opaDonateSpecifier];
 	}
-	[(UINavigationItem *)self.navigationItem setTitle:@"捐赠"];
+	[(UINavigationItem *)self.navigationItem setTitle:@"Donate"];
 	return _specifiers;
 }
 

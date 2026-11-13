@@ -17,10 +17,10 @@ extern NSUserDefaults* trollStoreUserDefaults();
 
 		PSSpecifier* installationMethodGroupSpecifier = [PSSpecifier emptyGroupSpecifier];
 		//installationMethodGroupSpecifier.name = @"Installation";
-		[installationMethodGroupSpecifier setProperty:@"installd：\n通过 installd 进行一次占位安装，修复权限，然后将其添加到图标缓存来安装应用。\n优点：在图标缓存重载方面，可能比自定义方式稍微更持久一些。\n缺点：会毫无缘由地对某些应用造成一些小问题（例如，使用此方式安装时 Watusi 无法保存偏好设置）。\n\n自定义（推荐）：\n通过 MobileContainerManager 手动创建 bundle，将 App 复制进去并添加到图标缓存来安装应用。\n优点：没有已知问题（与 installd 方式中提到的 Watusi 问题相对）。\n缺点：在图标缓存重载方面，可能比 installd 方式稍微不那么持久。\n\n注意：如果选择了 installd 但占位安装失败，巨魔商店会自动回退到使用自定义方式。" forKey:@"footerText"];
+		[installationMethodGroupSpecifier setProperty:@"installd:\nInstalls applications by doing a placeholder installation through installd, fixing the permissions and then adding it to icon cache.\nAdvantage: Might be slightly more persistent than the custom method in terms of icon cache reloads.\nDisadvantage: Causes some small issues with certain applications for seemingly no reason (E.g. Watusi cannot save preferences when being installed using this method).\n\nCustom (Recommended):\nInstalls applications by manually creating a bundle using MobileContainerManager, copying the app into it and adding it to icon cache.\nAdvantage: No known issues (As opposed to the Watusi issue outlined in the installd method).\nDisadvantage: Might be slightly less persistent then the installd method in terms of icon cache reloads.\n\nNOTE: In cases where installd is selected but the placeholder installation fails, TrollStore automatically falls back to using the Custom method." forKey:@"footerText"];
 		[_specifiers addObject:installationMethodGroupSpecifier];
 
-		PSSpecifier* installationMethodSpecifier = [PSSpecifier preferenceSpecifierNamed:@"安装方式"
+		PSSpecifier* installationMethodSpecifier = [PSSpecifier preferenceSpecifierNamed:@"Installation Method"
 											target:self
 											set:nil
 											get:nil
@@ -31,7 +31,7 @@ extern NSUserDefaults* trollStoreUserDefaults();
 		installationMethodSpecifier.identifier = @"installationMethodLabel";
 		[_specifiers addObject:installationMethodSpecifier];
 
-		PSSpecifier* installationMethodSegmentSpecifier = [PSSpecifier preferenceSpecifierNamed:@"安装方式"
+		PSSpecifier* installationMethodSegmentSpecifier = [PSSpecifier preferenceSpecifierNamed:@"Installation Method Segment"
 											target:self
 											set:@selector(setPreferenceValue:specifier:)
 											get:@selector(readPreferenceValue:)
@@ -43,16 +43,16 @@ extern NSUserDefaults* trollStoreUserDefaults();
 		[installationMethodSegmentSpecifier setProperty:APP_ID forKey:@"defaults"];
 		[installationMethodSegmentSpecifier setProperty:@"installationMethod" forKey:@"key"];
 		installationMethodSegmentSpecifier.values = @[@0, @1];
-		installationMethodSegmentSpecifier.titleDictionary = @{@0 : @"installd", @1 : @"自定义"};
+		installationMethodSegmentSpecifier.titleDictionary = @{@0 : @"installd", @1 : @"Custom"};
 		[installationMethodSegmentSpecifier setProperty:@1 forKey:@"default"];
 		[_specifiers addObject:installationMethodSegmentSpecifier];
 
 		PSSpecifier* uninstallationMethodGroupSpecifier = [PSSpecifier emptyGroupSpecifier];
 		//uninstallationMethodGroupSpecifier.name = @"Uninstallation";
-		[uninstallationMethodGroupSpecifier setProperty:@"installd（推荐）：\n使用与 SpringBoard 从主屏幕卸载应用时相同的 API 来卸载应用。\n\n自定义：\n通过将应用从图标缓存中移除，然后直接删除其应用和数据 bundle 来卸载应用。\n\n注意：如果选择了 installd 但系统卸载失败，巨魔商店会自动回退到使用自定义方式。" forKey:@"footerText"];
+		[uninstallationMethodGroupSpecifier setProperty:@"installd (Recommended):\nUninstalls applications using the same API that SpringBoard uses when uninstalling them from the home screen.\n\nCustom:\nUninstalls applications by removing them from icon cache and then deleting their application and data bundles directly.\n\nNOTE: In cases where installd is selected but the stock uninstallation fails, TrollStore automatically falls back to using the Custom method." forKey:@"footerText"];
 		[_specifiers addObject:uninstallationMethodGroupSpecifier];
 
-		PSSpecifier* uninstallationMethodSpecifier = [PSSpecifier preferenceSpecifierNamed:@"卸载方式"
+		PSSpecifier* uninstallationMethodSpecifier = [PSSpecifier preferenceSpecifierNamed:@"Uninstallation Method"
 											target:self
 											set:nil
 											get:nil
@@ -63,7 +63,7 @@ extern NSUserDefaults* trollStoreUserDefaults();
 		uninstallationMethodSpecifier.identifier = @"uninstallationMethodLabel";
 		[_specifiers addObject:uninstallationMethodSpecifier];
 
-		PSSpecifier* uninstallationMethodSegmentSpecifier = [PSSpecifier preferenceSpecifierNamed:@"卸载方式"
+		PSSpecifier* uninstallationMethodSegmentSpecifier = [PSSpecifier preferenceSpecifierNamed:@"Installation Method Segment"
 											target:self
 											set:@selector(setPreferenceValue:specifier:)
 											get:@selector(readPreferenceValue:)
@@ -75,12 +75,12 @@ extern NSUserDefaults* trollStoreUserDefaults();
 		[uninstallationMethodSegmentSpecifier setProperty:APP_ID forKey:@"defaults"];
 		[uninstallationMethodSegmentSpecifier setProperty:@"uninstallationMethod" forKey:@"key"];
 		uninstallationMethodSegmentSpecifier.values = @[@0, @1];
-		uninstallationMethodSegmentSpecifier.titleDictionary = @{@0 : @"installd", @1 : @"自定义"};
+		uninstallationMethodSegmentSpecifier.titleDictionary = @{@0 : @"installd", @1 : @"Custom"};
 		[uninstallationMethodSegmentSpecifier setProperty:@0 forKey:@"default"];
 		[_specifiers addObject:uninstallationMethodSegmentSpecifier];
 	}
 
-	[(UINavigationItem *)self.navigationItem setTitle:@"高级"];
+	[(UINavigationItem *)self.navigationItem setTitle:@"Advanced"];
 	return _specifiers;
 }
 

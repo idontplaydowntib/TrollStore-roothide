@@ -5,8 +5,8 @@
 
 #define TS_MARKER @"_TrollStore"
 #define TS_LITE_MARKER @"_TrollStoreLite"
-#define TS_NAME @"巨魔商店"
-#define TS_LITE_NAME @"巨魔商店 Lite"
+#define TS_NAME @"TrollStore"
+#define TS_LITE_NAME @"Trollstore Lite"
 
 #ifdef TROLLSTORE_LITE
 #define TS_ACTIVE_MARKER TS_LITE_MARKER

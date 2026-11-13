@@ -99,7 +99,7 @@ extern UIImage* imageWithSize(UIImage* image, CGSize size);
 
 			if(!_cachedAppBundleName)
 			{
-				NSString* errorDescription = @"无法在 .IPA 归档中定位 App bundle。";
+				NSString* errorDescription = @"Unable to locate app bundle inside the .IPA archive.";
 				outError = [NSError errorWithDomain:TrollStoreErrorDomain code:301 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
 			}
 		}
@@ -181,7 +181,7 @@ extern UIImage* imageWithSize(UIImage* image, CGSize size);
 
 	if(!_cachedInfoDictionary)
 	{
-		NSString* errorDescription = @"无法在 App bundle 中定位 Info.plist。";
+		NSString* errorDescription = @"Unable to locate Info.plist inside app bundle.";
 		return [NSError errorWithDomain:TrollStoreErrorDomain code:302 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
 	}
 	
@@ -220,7 +220,7 @@ extern UIImage* imageWithSize(UIImage* image, CGSize size);
 				struct archive_entry* mainBinaryEntry = [self archiveEntryForSubpath:bundleExecutableSubpath];
 				if(!mainBinaryEntry)
 				{
-					NSString* errorDescription = @"无法在 App bundle 中定位主二进制文件。";
+					NSString* errorDescription = @"Unable to locate main binary inside app bundle.";
 					return [NSError errorWithDomain:TrollStoreErrorDomain code:303 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
 				}
 				
@@ -263,7 +263,7 @@ extern UIImage* imageWithSize(UIImage* image, CGSize size);
 
 				if(![[NSFileManager defaultManager] fileExistsAtPath:bundleExecutablePath])
 				{
-					NSString* errorDescription = @"无法在 App bundle 中定位主二进制文件。";
+					NSString* errorDescription = @"Unable to locate main binary inside app bundle.";
 					return [NSError errorWithDomain:TrollStoreErrorDomain code:303 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
 				}
 
@@ -988,7 +988,7 @@ extern UIImage* imageWithSize(UIImage* image, CGSize size);
 			{
 				if([valueNum boolValue])
 				{
-					[allowedTccServices addObject:@"位置"];
+					[allowedTccServices addObject:@"Location"];
 				}
 			}
 		}
@@ -1063,56 +1063,56 @@ extern UIImage* imageWithSize(UIImage* image, CGSize size);
 		NSForegroundColorAttributeName : dangerColor
 	};
 
-	[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"元数据" attributes:headerAttributes]];
+	[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"Metadata" attributes:headerAttributes]];
 	
-	[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nBundle 标识符: %@", bundleId] attributes:bodyAttributes]];
-	[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n版本: %@", version] attributes:bodyAttributes]];
-	[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n大小: %@", sizeString] attributes:bodyAttributes]];
+	[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nBundle Identifier: %@", bundleId] attributes:bodyAttributes]];
+	[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nVersion: %@", version] attributes:bodyAttributes]];
+	[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nSize: %@", sizeString] attributes:bodyAttributes]];
 	
-	[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n沙盒" attributes:headerAttributes]];
+	[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\nSandboxing" attributes:headerAttributes]];
 	if(isUnsandboxed)
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n该 App 在沙盒外运行，可以访问文件系统的大部分内容。" attributes:bodyWarningAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nThe app runs unsandboxed and can access most of the file system." attributes:bodyWarningAttributes]];
 	}
 	else
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n该 App 在沙盒内运行，只能访问下方列出的容器。" attributes:bodyAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nThe app runs sandboxed and can only access the containers listed below." attributes:bodyAttributes]];
 	}
 
-	[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n能力" attributes:headerAttributes]];
+	[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\nCapabilities" attributes:headerAttributes]];
 	if(isPlatformApplication && isUnsandboxed && hasPersonaMngmt)
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n该 App 可以以 root 权限启动其内嵌的二进制文件。" attributes:bodyDangerAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nThe app can spawn its own embedded binaries with root privileges." attributes:bodyDangerAttributes]];
 	}
 	else if(isPlatformApplication && isUnsandboxed)
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n该 App 可以以 mobile 用户身份启动任意二进制文件。" attributes:bodyWarningAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nThe app can spawn arbitrary binaries as the mobile user." attributes:bodyWarningAttributes]];
 	}
 	else
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n该 App 无法启动其他二进制文件。" attributes:bodyAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nThe app can not spawn other binaries." attributes:bodyAttributes]];
 	}
 
 	if(allowedTccServices.count)
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n隐私" attributes:headerAttributes]];
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n该 App 无需请求许可即可访问以下服务:\n" attributes:bodyWarningAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\nPrivacy" attributes:headerAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nThe app can access the following services without asking for permission:\n" attributes:bodyWarningAttributes]];
 		[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSListFormatter localizedStringByJoiningStrings:[allowedTccServices allObjects]] attributes:bodyAttributes]];
 	}
 	
 	if (allowedMGKeys.count)
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n设备信息" attributes:headerAttributes]];
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n该 App 可以访问本设备的受保护信息:\n" attributes:bodyWarningAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\nDevice Info" attributes:headerAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nThe app can access protected information about this device:\n" attributes:bodyWarningAttributes]];
 		[description appendAttributedString:[[NSAttributedString alloc] initWithString:[NSListFormatter localizedStringByJoiningStrings:[allowedMGKeys allObjects]] attributes:bodyAttributes]];
 	}
     
 	if(unrestrictedContainerAccess || accessibleContainers.count)
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n可访问的容器" attributes:headerAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\nAccessible Containers" attributes:headerAttributes]];
 		if(unrestrictedContainerAccess)
 		{
-			[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n不受限制，该 App 可以访问系统上的所有数据容器。" attributes:bodyDangerAttributes]];
+			[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nUnrestricted, the app can access all data containers on the system." attributes:bodyDangerAttributes]];
 		}
 		else
 		{
@@ -1125,10 +1125,10 @@ extern UIImage* imageWithSize(UIImage* image, CGSize size);
 
 	if(unrestrictedKeychainAccess || accessibleKeychainGroups.count)
 	{
-		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n可访问的钥匙串群组" attributes:headerAttributes]];
+		[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\nAccessible Keychain Groups" attributes:headerAttributes]];
 		if(unrestrictedKeychainAccess)
 		{
-			[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n不受限制，该 App 可以访问整个钥匙串。" attributes:bodyDangerAttributes]];
+			[description appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nUnrestricted, the app can access the entire keychain." attributes:bodyDangerAttributes]];
 		}
 		else
 		{
